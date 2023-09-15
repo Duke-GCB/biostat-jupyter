@@ -29,7 +29,7 @@ RUN pip3 install --no-cache-dir \
 
 # -------------------------------------------------------------------
 # R kernel and packages for Jupyter, copying the recipe from
-#
+# https://github.com/jupyter/docker-stacks/blob/main/images/r-notebook/Dockerfile
 # -------------------------------------------------------------------
 USER root
 
