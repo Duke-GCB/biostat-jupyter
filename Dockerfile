@@ -40,6 +40,8 @@ USER ${NB_UID}
 
 # R packages including IRKernel which gets installed globally.
 # r-e1071: dependency of the caret R package
+# We take these verbatim from the Jupyter Docker Stacks R kernel Dockerfile:
+# https://github.com/jupyter/docker-stacks/blob/main/images/r-notebook/Dockerfile
 RUN mamba install --yes \
     'r-base' \
     'r-caret' \
@@ -61,6 +63,21 @@ RUN mamba install --yes \
     'r-tidymodels' \
     'r-tidyverse' \
     'unixodbc' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Additional R packages used in this course
+RUN mamba install --yes \
+    'r-gt' \
+    'r-gtsummary' \
+    'r-kableextra' \
+    'r-microbenchmark' \
+    'r-rcppeigen' \
+    'r-rcppnumerical' \
+    'r-tensorflow' \
+    'r-keras' \
+    'r-tfprobability' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
