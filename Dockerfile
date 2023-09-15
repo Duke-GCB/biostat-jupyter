@@ -5,12 +5,20 @@ LABEL "org.opencontainers.image.description"="Jupyter Lab (without GPU support) 
 
 # We follow the standard recommended recipe for custom builds off of Jupyter Docker Stacks
 RUN mamba install --yes \
-    'tensorflow-probability' \
     'jupytext' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
+# For some reason if we use mamba to install this, it ends up downgrading
+# Tensorflow, even when pinning it to >=2.13.0.
+RUN pip3 install --no-cache-dir \
+    tensorflow-probability && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Separate installation of PyTorch to use CPU-only version according to instructions
+# See https://pytorch.org/get-started/locally/
 RUN pip3 install --no-cache-dir \
     torch \
     torchvision \
