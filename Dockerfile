@@ -5,7 +5,8 @@ LABEL "org.opencontainers.image.description"="Jupyter Lab (without GPU support) 
 
 # We follow the standard recommended recipe for custom builds off of Jupyter Docker Stacks
 RUN mamba install --yes \
-    'tensorflow-probability' && \
+    'tensorflow-probability' \
+    'jupytext' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
