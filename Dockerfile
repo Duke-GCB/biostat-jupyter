@@ -1,4 +1,8 @@
-FROM jupyter/tensorflow-notebook:tensorflow-2.13.0
+ARG TENSORFLOW_VERSION=2.17.0
+FROM quay.io/jupyter/tensorflow-notebook:tensorflow-${TENSORFLOW_VERSION}
+
+# must redefine as initial definition has gone out of scope
+ARG TENSORFLOW_VERSION=2.17.0
 
 LABEL "org.opencontainers.image.authors"="Hilmar Lapp <hilmar.lapp@duke.edu>"
 LABEL "org.opencontainers.image.description"="Jupyter Lab (without GPU support) for Biostat courses"
@@ -10,20 +14,20 @@ RUN mamba install --yes \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# For some reason if we use mamba to install this, it ends up downgrading
-# Tensorflow, even when pinning it to >=2.13.0.
+# tensorflow-probability
+# For some reason if we use mamba to install this, it can end up downgrading Tensorflow
 RUN pip3 install --no-cache-dir \
+    tensorflow=$TENSORFLOW_VERSION \
     tensorflow-probability && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
 # Separate installation of PyTorch to use CPU-only version according to instructions
 # See https://pytorch.org/get-started/locally/
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu' \
     torch \
     torchvision \
-    torchaudio \
-    --index-url https://download.pytorch.org/whl/cpu && \
+    torchaudio && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
@@ -75,7 +79,7 @@ RUN mamba install --yes \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Additional R packages used in this course
+# Additional R packages potentially used in this course
 RUN mamba install --yes \
     'r-gt' \
     'r-gtsummary' \
