@@ -17,7 +17,6 @@ RUN mamba install --yes \
 # tensorflow-probability
 # For some reason if we use mamba to install this, it can end up downgrading Tensorflow
 RUN pip3 install --no-cache-dir \
-    "tensorflow>=$TENSORFLOW_VERSION" \
     tensorflow-probability && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
