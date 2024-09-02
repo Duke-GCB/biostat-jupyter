@@ -31,7 +31,8 @@ RUN pip install --no-cache-dir \
     tensorflow-probability \
     keras-nlp \
     pyarrow \
-    duckdb && \
+    duckdb \
+    tqdm && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
@@ -41,6 +42,14 @@ RUN pip install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu
     torch \
     torchvision \
     torchaudio && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# HF packages
+RUN pip install --no-cache-dir \
+    huggingface_hub \
+    transformers \
+    datasets && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
