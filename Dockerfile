@@ -36,12 +36,11 @@ RUN pip install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu
     fix-permissions "/home/${NB_USER}"
 
 # Additional packages we may need
-COPY requirements.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/addon-requirements.txt
 RUN pip install --no-cache-dir \
-    -r /tmp/requirements.txt && \
+    -r /tmp/addon-requirements.txt && \
     fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}" && \
-    rm -f /tmp/requirements.txt
+    fix-permissions "/home/${NB_USER}"
 
 # -------------------------------------------------------------------
 # R kernel and packages for Jupyter, copying the recipe from
