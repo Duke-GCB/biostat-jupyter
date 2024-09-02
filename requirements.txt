@@ -1,0 +1,8 @@
+tensorflow-probability
+keras-nlp
+pyarrow
+duckdb
+tqdm
+huggingface_hub
+transformers
+datasets

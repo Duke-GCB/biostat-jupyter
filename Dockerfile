@@ -19,20 +19,10 @@ RUN mamba install --yes \
 #
 # Otherwise we end up with a redundant installation because some dependency
 # chains (such as keras-nlp->tensorflow-text->tensorflow) will result in a
-# tensorflow requiement which isn't satisfied by tensorflow-cpu.
+# tensorflow requirement which doesn't resolve to tensorflow-cpu.
 RUN [[ $(uname -m) = x86_64 ]] &&  \
     pip uninstall -y "tensorflow-cpu" && \
     pip install --no-cache-dir tensorflow==${TENSORFLOW_VERSION} && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-
-# tensorflow-probability and a few other packages that may be needed
-RUN pip install --no-cache-dir \
-    tensorflow-probability \
-    keras-nlp \
-    pyarrow \
-    duckdb \
-    tqdm && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
@@ -45,13 +35,13 @@ RUN pip install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# HF packages
+# Additional packages we may need
+COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir \
-    huggingface_hub \
-    transformers \
-    datasets && \
+    -r /tmp/requirements.txt && \
     fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    fix-permissions "/home/${NB_USER}" && \
+    rm -f /tmp/requirements.txt
 
 # -------------------------------------------------------------------
 # R kernel and packages for Jupyter, copying the recipe from
