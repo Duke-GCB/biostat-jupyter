@@ -21,7 +21,7 @@ RUN mamba install --yes \
 # chains (such as keras-nlp->tensorflow-text->tensorflow) will result in a
 # tensorflow requiement which isn't satisfied by tensorflow-cpu.
 RUN [[ $(uname -m) = x86_64 ]] &&  \
-    pip uninstall "tensorflow-cpu" && \
+    pip uninstall -y "tensorflow-cpu" && \
     pip install --no-cache-dir tensorflow==${TENSORFLOW_VERSION} && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
