@@ -1,0 +1,43 @@
+ARG TENSORFLOW_VERSION=2.17.0
+FROM quay.io/jupyter/tensorflow-notebook:tensorflow-${TENSORFLOW_VERSION}
+
+# must redefine as initial definition has gone out of scope
+ARG TENSORFLOW_VERSION=2.17.0
+
+LABEL "org.opencontainers.image.authors"="Hilmar Lapp <hilmar.lapp@duke.edu>"
+LABEL "org.opencontainers.image.description"="Jupyter Lab (without GPU support) for Biostat courses"
+
+# We follow the standard recommended recipe for custom builds off of Jupyter Docker Stacks
+RUN mamba install --yes \
+    'jupytext' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Uninstall tensorflow-cpu if it was installed on the x86_64 platform, and
+# in that case reinstall as plain tensorflow.
+#
+# Otherwise we end up with a redundant installation because some dependency
+# chains (such as keras-nlp->tensorflow-text->tensorflow) will result in a
+# tensorflow requirement which doesn't resolve to tensorflow-cpu.
+RUN [[ $(uname -m) = x86_64 ]] &&  \
+    pip uninstall -y "tensorflow-cpu" && \
+    pip install --no-cache-dir tensorflow==${TENSORFLOW_VERSION} && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Separate installation of PyTorch to use CPU-only version according to instructions
+# See https://pytorch.org/get-started/locally/
+RUN pip install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu' \
+    torch \
+    torchvision \
+    torchaudio && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Additional packages we may need
+COPY requirements.txt /tmp/addon-requirements.txt
+RUN pip install --no-cache-dir \
+    -r /tmp/addon-requirements.txt && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"

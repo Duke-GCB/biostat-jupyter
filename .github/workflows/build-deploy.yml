@@ -5,6 +5,7 @@ on:
     branches: main
     paths:
       - 'Dockerfile'
+      - 'Dockerfile-pyonly'
   release:
     types: [published]
 
@@ -35,6 +36,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=-py,onlatest=true
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
@@ -46,6 +49,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile-pyonly
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
