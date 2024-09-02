@@ -14,9 +14,10 @@ RUN mamba install --yes \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# tensorflow-probability
-# For some reason if we use mamba to install this, it can end up downgrading Tensorflow
-RUN pip3 install --no-cache-dir \
+# tensorflow-probability and a few other packages that may be needed
+RUN [[ $(uname -m) = x86_64 ]] && TF_POSTFIX="-cpu" || TF_POSTFIX="" && \
+    pip install --no-cache-dir \
+    "tensorflow${TF_POSTFIX}"==${TENSORFLOW_VERSION} \
     tensorflow-probability \
     keras-nlp \
     pyarrow \
@@ -26,7 +27,7 @@ RUN pip3 install --no-cache-dir \
 
 # Separate installation of PyTorch to use CPU-only version according to instructions
 # See https://pytorch.org/get-started/locally/
-RUN pip3 install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu' \
+RUN pip install --no-cache-dir --index-url 'https://download.pytorch.org/whl/cpu' \
     torch \
     torchvision \
     torchaudio && \
