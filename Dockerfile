@@ -14,10 +14,20 @@ RUN mamba install --yes \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
+# Uninstall tensorflow-cpu if it was installed on the x86_64 platform, and
+# in that case reinstall as plain tensorflow.
+#
+# Otherwise we end up with a redundant installation because some dependency
+# chains (such as keras-nlp->tensorflow-text->tensorflow) will result in a
+# tensorflow requiement which isn't satisfied by tensorflow-cpu.
+RUN [[ $(uname -m) = x86_64 ]] &&  \
+    pip uninstall "tensorflow-cpu" && \
+    pip install --no-cache-dir tensorflow==${TENSORFLOW_VERSION} && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
 # tensorflow-probability and a few other packages that may be needed
-RUN [[ $(uname -m) = x86_64 ]] && TF_POSTFIX="-cpu" || TF_POSTFIX="" && \
-    pip install --no-cache-dir \
-    "tensorflow${TF_POSTFIX}"==${TENSORFLOW_VERSION} \
+RUN pip install --no-cache-dir \
     tensorflow-probability \
     keras-nlp \
     pyarrow \
