@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: main
+    branches: foo
     paths-ignore:
       - 'LICENSE'
       - 'README.md'
@@ -137,6 +137,18 @@ jobs:
       packages: write
 
     steps:
+      # Image with CUDA needs extra disk space
+      - name: Free disk space 🧹
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
