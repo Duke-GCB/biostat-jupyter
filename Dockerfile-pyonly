@@ -26,7 +26,8 @@ RUN [[ $(uname -m) = x86_64 && -z ${CUDA} ]] &&  \
     pip uninstall -y "tensorflow-cpu" && \
     pip install --no-cache-dir tensorflow==${TENSORFLOW_VERSION} && \
     fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    fix-permissions "/home/${NB_USER}" || \
+    true
 
 # Separate installation of PyTorch to use CPU-only version according to instructions
 # See https://pytorch.org/get-started/locally/
