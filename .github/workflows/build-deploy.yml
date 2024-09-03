@@ -48,7 +48,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Build and push Docker image
+      - name: Build and push Python-only Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -56,6 +56,33 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-to: type=gha,mode=max
+          cache-from: type=gha
+
+      - name: Extract metadata (tags, labels) for Docker with CUDA
+        id: metagpu
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=-py-cuda,onlatest=true
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Build and push Python-only Docker image with CUDA
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile-pyonly
+          build-args: |
+            CUDA=cuda-
+          push: true
+          tags: ${{ steps.metagpu.outputs.tags }}
+          labels: ${{ steps.metagpu.outputs.labels }}
           cache-to: type=gha,mode=max
           cache-from: type=gha
 
@@ -99,5 +126,31 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-to: type=gha,mode=max
+          cache-from: type=gha
+
+      - name: Extract metadata (tags, labels) for Docker with CUDA
+        id: metagpu
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=-cuda,onlatest=true
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Build and push Docker image with CUDA
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          build-args: |
+            BASE_TAG=latest-py-cuda
+          push: true
+          tags: ${{ steps.metagpu.outputs.tags }}
+          labels: ${{ steps.metagpu.outputs.labels }}
           cache-to: type=gha,mode=max
           cache-from: type=gha
