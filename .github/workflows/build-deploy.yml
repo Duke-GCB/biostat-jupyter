@@ -54,7 +54,10 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
           labels: |
-            org.opencontainers.image.description="Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions."
+            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions.
+          annotations: |
+            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions.
+
       - name: Build and push Python-only Docker image
         uses: docker/build-push-action@v6
         with:
@@ -101,7 +104,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
           labels: |
-            org.opencontainers.image.description="Combines the Docker Stacks tensorflow-notebook, pytorch-notebook, and r-notebook containers plus jupytext and custom package additions."
+            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook, pytorch-notebook, and r-notebook containers plus jupytext and custom package additions.
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
