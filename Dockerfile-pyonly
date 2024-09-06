@@ -2,6 +2,8 @@ ARG TENSORFLOW_VERSION=2.17.0
 ARG CUDA
 FROM quay.io/jupyter/tensorflow-notebook:${CUDA}tensorflow-${TENSORFLOW_VERSION}
 
+LABEL org.opencontainers.image.description="Combining the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions."
+
 # must redefine as initial definition has gone out of scope
 ARG TENSORFLOW_VERSION=2.17.0
 ARG CUDA

@@ -1,6 +1,8 @@
 ARG BASE_TAG=latest-py
 FROM ghcr.io/duke-gcb/biostat-jupyter:${BASE_TAG}
 
+LABEL org.opencontainers.image.description="Combining the Docker Stacks tensorflow-notebook, pytorch-notebook, and r-notebook containers plus jupytext and custom package additions."
+
 # -------------------------------------------------------------------
 # R kernel and packages for Jupyter, copying the recipe from
 # https://github.com/jupyter/docker-stacks/blob/main/images/r-notebook/Dockerfile
