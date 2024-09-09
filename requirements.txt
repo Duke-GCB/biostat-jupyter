@@ -2,7 +2,8 @@ tensorflow-probability
 keras-nlp
 pyarrow
 duckdb
-jupysql
+# jupysql currently installs a nuisance dep (ploomber-extension) by default
+git+https://github.com/Duke-GCB/jupysql.git@0.10.12.1
 tqdm
 huggingface_hub
 transformers
