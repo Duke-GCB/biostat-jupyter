@@ -2,6 +2,7 @@ tensorflow-probability
 keras-nlp
 pyarrow
 duckdb
+ipython-sql
 tqdm
 huggingface_hub
 transformers
