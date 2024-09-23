@@ -49,3 +49,6 @@ RUN pip install --no-cache-dir \
     -r /tmp/addon-requirements.txt && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
+# Base directory for ontologies cached by OAK
+ENV PYSTOW_HOME=$HOME/.cache/oak/
