@@ -12,3 +12,7 @@ huggingface_hub
 transformers
 datasets
 oaklib
+# coolbox requires matplotlib < 3.9.0
+# due to accessing matplotlib.collections.BrokenBarHCollection
+matplotlib<3.9.0
+coolbox
