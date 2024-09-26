@@ -11,8 +11,18 @@ ARG CUDA
 LABEL "org.opencontainers.image.authors"="Hilmar Lapp <hilmar.lapp@duke.edu>"
 LABEL "org.opencontainers.image.description"="Jupyter Lab (without GPU support) for Biostat courses"
 
-RUN apt-get update && apt-get install --yes \
-    libcurl4-openssl-dev
+# -------------------------------------------------------------------
+# Additional system packages needed by Python modules
+# -------------------------------------------------------------------
+USER root
+
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    libcurl4-openssl-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER ${NB_UID}
+# -------------------------------------------------------------------
 
 # We follow the standard recommended recipe for custom builds off of Jupyter Docker Stacks
 RUN mamba install --yes \
