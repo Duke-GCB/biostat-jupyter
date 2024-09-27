@@ -58,9 +58,10 @@ RUN [[ -n ${CUDA} ]] && \
     fix-permissions "/home/${NB_USER}"
 
 # Additional packages we may need
-COPY requirements.txt /tmp/addon-requirements.txt
+COPY common-requirements.txt requirements.tf-${TENSORFLOW_VERSION}.txt /tmp/
 RUN pip install --no-cache-dir \
-    -r /tmp/addon-requirements.txt && \
+    tensorflow==${TENSORFLOW_VERSION} \
+    -r /tmp/requirements.tf-${TENSORFLOW_VERSION}.txt && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 

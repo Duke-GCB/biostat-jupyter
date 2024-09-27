@@ -63,6 +63,8 @@ jobs:
         with:
           context: .
           file: Dockerfile-pyonly
+          build-args: |
+            TENSORFLOW_VERSION=2.17.0
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
@@ -113,5 +115,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-to: type=gha,mode=max
-          cache-from: type=gha

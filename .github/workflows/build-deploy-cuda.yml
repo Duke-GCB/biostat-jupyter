@@ -58,6 +58,7 @@ jobs:
           file: Dockerfile-pyonly
           build-args: |
             CUDA=cuda-
+            TENSORFLOW_VERSION=2.17.0
           push: true
           tags: ${{ steps.metagpu.outputs.tags }}
           labels: ${{ steps.metagpu.outputs.labels }}
@@ -122,5 +123,3 @@ jobs:
           push: true
           tags: ${{ steps.metagpu.outputs.tags }}
           labels: ${{ steps.metagpu.outputs.labels }}
-          cache-to: type=gha,mode=max
-          cache-from: type=gha

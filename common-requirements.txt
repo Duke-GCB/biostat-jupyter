@@ -1,5 +1,3 @@
-tensorflow-probability
-keras-nlp
 pyarrow
 duckdb
 # jupysql currently installs a nuisance dep (ploomber-extension) by default
