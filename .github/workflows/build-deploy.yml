@@ -103,7 +103,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            suffix=-tf${{ env.TF_VERSION }},onlatest=true
+            suffix=-tf${{ env.TF_VERSION }},onlatest=false
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
