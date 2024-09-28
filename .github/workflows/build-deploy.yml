@@ -7,12 +7,15 @@ on:
       - 'LICENSE'
       - 'README.md'
       - '.github/workflows/build-deploy-cuda.yml'
+      - '.github/workflows/build-deploy-keras2.yml'
+      - 'requirements.tf-2.15.0.txt'
   release:
     types: [published]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  TF_VERSION: 2.17.0
 
 jobs:
   build-and-push-pyimage:
@@ -46,7 +49,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            suffix=-py,onlatest=true
+            suffix=-py-tf${{ env.TF_VERSION }},onlatest=true
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
@@ -64,7 +67,7 @@ jobs:
           context: .
           file: Dockerfile-pyonly
           build-args: |
-            TENSORFLOW_VERSION=2.17.0
+            TENSORFLOW_VERSION=${{ env.TF_VERSION }}
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
@@ -99,6 +102,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=-tf${{ env.TF_VERSION }},onlatest=true
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
@@ -112,6 +117,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          build-args: |
+            BASE_TAG=latest-py-tf${{ env.TF_VERSION }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
