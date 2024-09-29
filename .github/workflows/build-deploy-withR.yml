@@ -21,11 +21,9 @@ on:
       base_tag:
         required: false
         type: string
-        default: latest-py${{ inputs.cuda && '-cuda' || '' }}-tf${{ inputs.tf_version }}
       tag_suffix:
         required: false
         type: string
-        default: ${{ inputs.cuda && '-cuda' || '' }}-tf${{ inputs.tf_version }}
       tag_latest:
         required: false
         type: boolean
@@ -56,6 +54,9 @@ jobs:
           swap-storage: false
         if: inputs.cuda
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -68,11 +69,13 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
+        env:
+          suffix: ${{ inputs.tag_suffix && inputs.tag_suffix || format('{0}-tf{1}', inputs.cuda && '-cuda' || '', inputs.tf_version) }}
         uses: docker/metadata-action@v5
         with:
           images: ${{ inputs.registry }}/${{ inputs.image_name }}
           flavor: |
-            suffix=${{ inputs.tag_suffix }},onlatest=${{ ! inputs.tag_latest }}
+            suffix=${{ env.suffix }},onlatest=${{ ! inputs.tag_latest }}
             latest=${{ inputs.tag_latest && inputs.tag_latest || 'auto' }}
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && !inputs.tag_latest }}
@@ -88,6 +91,6 @@ jobs:
         with:
           context: .
           build-args: |
-            BASE_TAG=${{ inputs.base_tag }}
+            BASE_TAG=${{ inputs.base_tag && inputs.base_tag || format('latest-py{0}-tf{1}', inputs.cuda && '-cuda' || '', inputs.tf_version) }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}

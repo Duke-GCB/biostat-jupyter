@@ -21,7 +21,6 @@ on:
       tag_suffix:
         required: false
         type: string
-        default: -py${{ inputs.cuda && '-cuda' || '' }}-tf${{ inputs.tf_version }}
       tag_latest:
         required: false
         type: boolean
@@ -65,11 +64,13 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
+        env:
+          suffix: ${{ inputs.tag_suffix && inputs.tag_suffix || format('-py{0}-tf{1}', inputs.cuda && '-cuda' || '', inputs.tf_version) }}
         uses: docker/metadata-action@v5
         with:
           images: ${{ inputs.registry }}/${{ inputs.image_name }}
           flavor: |
-            suffix=${{ inputs.tag_suffix }},onlatest=${{ ! inputs.tag_latest }}
+            suffix=${{ env.suffix }},onlatest=${{ ! inputs.tag_latest }}
             latest=${{ inputs.tag_latest && inputs.tag_latest || 'auto' }}
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && !inputs.tag_latest }}
