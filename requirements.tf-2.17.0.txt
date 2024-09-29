@@ -1,6 +1,7 @@
 tensorflow-probability[tf]
 tensorflow-text ; platform_machine != "aarch64"
 keras-nlp ; platform_machine != "aarch64"
+tf-keras
 # As per its own req's, transformers needs TF<2.16, but apparently it
 # installs and loads anyway. Use with caution. 
 transformers
