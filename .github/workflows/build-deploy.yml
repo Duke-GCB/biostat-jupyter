@@ -19,106 +19,30 @@ env:
 
 jobs:
   build-and-push-pyimage:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/amd64,linux/arm64
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            suffix=-py-tf${{ env.TF_VERSION }},onlatest=true
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-          labels: |
-            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions.
-          annotations: |
-            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions.
-
-      - name: Build and push Python-only Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile-pyonly
-          build-args: |
-            TENSORFLOW_VERSION=${{ env.TF_VERSION }}
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          cache-to: type=gha,mode=max
-          cache-from: type=gha
+    uses: ./.github/workflows/build-deploy-py.yml
+    with:
+      registry: ${{ env.REGISTRY }}
+      image_name: ${{ env.IMAGE_NAME }}
+      tf_version: ${{ env.TF_VERSION }}
+      tag_suffix: -py-tf${{ env.TF_VERSION }}
+      tag_latest: false
+      multiplatform: true
 
   build-and-push-image-withR:
-    runs-on: ubuntu-latest
     needs: build-and-push-pyimage
     permissions:
       contents: read
       packages: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            suffix=-tf${{ env.TF_VERSION }},onlatest=false
-            latest=true
-          tags: |
-            type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-          labels: |
-            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook, pytorch-notebook, and r-notebook containers plus jupytext and custom package additions.
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          build-args: |
-            BASE_TAG=latest-py-tf${{ env.TF_VERSION }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+    uses: ./.github/workflows/build-deploy-withR.yml
+    with:
+      registry: ${{ env.REGISTRY }}
+      image_name: ${{ env.IMAGE_NAME }}
+      base_tag: latest-py-tf${{ env.TF_VERSION }}
+      tag_suffix: -tf${{ env.TF_VERSION }}
+      tag_latest: true
+      multiplatform: false
