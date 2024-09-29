@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create and publish images off TF-2.15.0
 
 on:
   push:

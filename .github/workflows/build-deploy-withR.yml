@@ -1,4 +1,4 @@
-name: Setup, configure, build and deploy Python plus R kernel container
+name: Build and deploy Python plus R kernel container
 
 on:
   workflow_call:
@@ -94,3 +94,5 @@ jobs:
             BASE_TAG=${{ inputs.base_tag && inputs.base_tag || format('latest-py{0}-tf{1}', inputs.cuda && '-cuda' || '', inputs.tf_version) }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          cache-to: type=gha,mode=max
+          cache-from: type=gha

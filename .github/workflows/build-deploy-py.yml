@@ -1,4 +1,4 @@
-name: Setup, configure, build and deploy Python-only container
+name: Build and deploy Python-only container
 
 on:
   workflow_call:
