@@ -12,11 +12,6 @@ on:
   release:
     types: [published]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  TF_VERSION: 2.17.0
-
 jobs:
   build-and-push-pyimage:
     permissions:
@@ -25,10 +20,7 @@ jobs:
 
     uses: ./.github/workflows/build-deploy-py.yml
     with:
-      registry: ${{ env.REGISTRY }}
-      image_name: ${{ env.IMAGE_NAME }}
-      tf_version: ${{ env.TF_VERSION }}
-      tag_suffix: -py-tf${{ env.TF_VERSION }}
+      tf_version: 2.17.0
       tag_latest: false
       multiplatform: true
 
@@ -40,9 +32,6 @@ jobs:
 
     uses: ./.github/workflows/build-deploy-withR.yml
     with:
-      registry: ${{ env.REGISTRY }}
-      image_name: ${{ env.IMAGE_NAME }}
-      base_tag: latest-py-tf${{ env.TF_VERSION }}
-      tag_suffix: -tf${{ env.TF_VERSION }}
+      tf_version: 2.17.0
       tag_latest: true
       multiplatform: false

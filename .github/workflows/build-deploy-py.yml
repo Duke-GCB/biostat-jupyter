@@ -4,17 +4,20 @@ on:
   workflow_call:
     inputs:
       registry:
-        required: true
+        required: false
         type: string
+        default: ghcr.io
       image_name:
-        required: true
+        required: false
         type: string
+        default: ${{ github.repository }}
       tf_version:
         required: true
         type: string
       tag_suffix:
-        required: true
+        required: false
         type: string
+        default: -py-tf${{ inputs.tf_version }}
       tag_latest:
         required: false
         type: boolean
