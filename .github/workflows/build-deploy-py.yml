@@ -14,10 +14,14 @@ on:
       tf_version:
         required: true
         type: string
+      cuda:
+        required: false
+        type: boolean
+        default: false
       tag_suffix:
         required: false
         type: string
-        default: -py-tf${{ inputs.tf_version }}
+        default: -py${{ inputs.cuda && '-cuda' || '' }}-tf${{ inputs.tf_version }}
       tag_latest:
         required: false
         type: boolean
@@ -30,6 +34,10 @@ on:
         required: false
         type: string
         default: linux/amd64,linux/arm64
+      image_description:
+        required: false
+        type: string
+        default: Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions.
 
 jobs:
   build-and-push-image:
@@ -64,13 +72,13 @@ jobs:
             suffix=${{ inputs.tag_suffix }},onlatest=${{ ! inputs.tag_latest }}
             latest=${{ inputs.tag_latest && inputs.tag_latest || 'auto' }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch && !inputs.tag_latest}}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && !inputs.tag_latest }}
             type=raw,value={{date 'YYYY'}},enable={{is_default_branch}}
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
           labels: |
-            org.opencontainers.image.description=Combines the Docker Stacks tensorflow-notebook, pytorch-notebook, and r-notebook containers plus jupytext and custom package additions.
+            org.opencontainers.image.description=${{ inputs.image_description }}
 
       - name: Build and push Python-only Docker image
         uses: docker/build-push-action@v6
@@ -78,6 +86,7 @@ jobs:
           context: .
           file: Dockerfile-pyonly
           build-args: |
+            CUDA=${{ inputs.cuda && 'cuda-' || '' }}
             TENSORFLOW_VERSION=${{ inputs.tf_version }}
           push: true
           platforms: ${{ inputs.multiplatform && inputs.platforms || 'linux/amd64' }}
