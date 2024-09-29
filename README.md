@@ -2,7 +2,7 @@
 
 Builds and deploys customized Jupyter Lab Docker container images.
 
-The images are currently built off of the [jupyter/tensorflow-notebook`](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-tensorflow-notebook) containers from the (excellent) [Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/) project.
+The images are currently built off of the [jupyter/tensorflow-notebook](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-tensorflow-notebook) containers from the (excellent) [Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/) project.
 
 Customization includes adding the following:
 - [jupytext](https://jupytext.readthedocs.io/)
