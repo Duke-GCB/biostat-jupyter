@@ -7,7 +7,11 @@ The images are currently built off of the [jupyter/tensorflow-notebook`](https:/
 Customization includes adding the following:
 - [jupytext](https://jupytext.readthedocs.io/)
 - [PyTorch](https://pytorch.org)
-- Additional Python packages (see [`common-requirements.txt`](common-requirements.txt) and those specific to [Tensorflow 2.17+](requirements.tf-2.17.0.txt) and [Tensorflow 2.15.0](requirements.tf-2.15.0.txt))
+- Additional Python packages (see [`common-requirements.txt`](common-requirements.txt) and those specific to [Tensorflow 2.17+](requirements.tf-2.17.0.txt) and [Tensorflow 2.15.0](requirements.tf-2.15.0.txt)). These include the following:
+    * [JupySQL extension](https://jupysql.ploomber.io/) enabling the `%sql` cell magic.
+    * [DuckDB](https://duckdb.org) with [Parquet](https://parquet.apache.org)
+    * [Ontology Access Kit](https://incatools.github.io/ontology-access-kit/) library
+    * [Coolbox](https://gangcaolab.github.io/CoolBox/) for genome track visualization
 - [R kernel for Jupyter](https://irkernel.github.io) and a variety of commonly used R packages mirroring the recipe for the [Docker Stacks R Notebook](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-r-notebook), plus the R packages for tensorflow, keras, and tf-probability.
 
 For all additions, we follow the recipes from the Docker Stacks container definitions to the extent possible.  
