@@ -48,7 +48,7 @@ RUN [[ $(uname -m) = x86_64 && -z ${CUDA} ]] &&  \
 # Separate installation of PyTorch to use CPU-only version according to instructions
 # See https://pytorch.org/get-started/locally/
 RUN [[ -n ${CUDA} ]] && \
-    EXTRA_INDEX="--extra-index-url=https://pypi.nvidia.com" CUDA_WHL_SUFFIX="cu121" || \
+    EXTRA_INDEX="--extra-index-url=https://pypi.nvidia.com" CUDA_WHL_SUFFIX="cu118" || \
     EXTRA_INDEX="" CUDA_WHL_SUFFIX="cpu" && \
     pip install --no-cache-dir $EXTRA_INDEX --index-url "https://download.pytorch.org/whl/${CUDA_WHL_SUFFIX}" \
     torch \
