@@ -18,6 +18,9 @@ on:
         required: false
         type: boolean
         default: false
+      basedigest:
+        required: false
+        type: string
       tag_suffix:
         required: false
         type: string
@@ -89,6 +92,7 @@ jobs:
           build-args: |
             CUDA=${{ inputs.cuda && 'cuda-' || '' }}
             TENSORFLOW_VERSION=${{ inputs.tf_version }}
+            DIGEST=${{ inputs.basedigest }}
           push: true
           platforms: ${{ inputs.multiplatform && inputs.platforms || 'linux/amd64' }}
           tags: ${{ steps.meta.outputs.tags }}

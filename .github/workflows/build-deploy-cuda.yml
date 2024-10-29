@@ -26,6 +26,7 @@ jobs:
     uses: ./.github/workflows/build-deploy-py.yml
     with:
       tf_version: 2.17.0
+      basedigest: "@sha256:cb1cac983d469ddd8702c382b01a6c02bbb9c9fda1765caf269b38f2d228f9d8"
       cuda: true
       tag_latest: false
       multiplatform: false

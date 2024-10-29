@@ -1,6 +1,11 @@
 ARG TENSORFLOW_VERSION=2.17.0
 ARG CUDA
-FROM quay.io/jupyter/tensorflow-notebook:${CUDA}tensorflow-${TENSORFLOW_VERSION}
+ARG TAG=:${CUDA}tensorflow-${TENSORFLOW_VERSION}
+ARG DIGEST
+ARG IMAGE_REF=${DIGEST:-${TAG}}
+ARG IMAGE=quay.io/jupyter/tensorflow-notebook${IMAGE_REF}
+
+FROM ${IMAGE}
 
 LABEL org.opencontainers.image.description="Combines the Docker Stacks tensorflow-notebook and pytorch-notebook containers plus jupytext and custom package additions."
 
