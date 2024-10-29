@@ -1,3 +1,4 @@
+umap-learn
 pyarrow
 duckdb
 # jupysql currently installs a nuisance dep (ploomber-extension) by default
