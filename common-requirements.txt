@@ -1,5 +1,6 @@
 umap-learn
 pyarrow
+polars
 duckdb
 # jupysql currently installs a nuisance dep (ploomber-extension) by default
 git+https://github.com/Duke-GCB/jupysql-utils.git@0.2.25.1
