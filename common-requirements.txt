@@ -7,6 +7,9 @@ git+https://github.com/Duke-GCB/jupysql-utils.git@0.2.25.1
 git+https://github.com/Duke-GCB/jupysql.git@0.10.12.1
 # alternatively, fall back to legacy package (which should still work)
 # ipython-sql
+optuna
+optuna-dashboard
+jupyterlab-optuna
 tqdm
 huggingface_hub
 transformers
