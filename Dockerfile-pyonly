@@ -62,7 +62,14 @@ RUN [[ -n ${CUDA} ]] && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Additional packages we may need
+# Install graphviz for pydot, which is needed by keras.util.plot_model
+RUN mamba install --yes \
+    'graphviz' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+    # Additional packages we may need
 COPY common-requirements.txt requirements.tf-${TENSORFLOW_VERSION}.txt /tmp/
 RUN pip install --no-cache-dir \
     tensorflow==${TENSORFLOW_VERSION} \

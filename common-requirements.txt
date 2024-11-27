@@ -20,3 +20,5 @@ oaklib
 matplotlib<3.9.0
 seaborn
 coolbox
+# pydot will need graphviz as dependency
+pydot
