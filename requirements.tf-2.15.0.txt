@@ -1,6 +1,7 @@
 tensorflow-probability<=0.23.0
 tensorflow-text<=2.15.0 ; platform_machine != "aarch64" and platform_machine != "arm64"
 keras-nlp==0.6.3 ; platform_machine != "aarch64"
+tensorflow-datasets
 # At this time, the current release is 4.45.1.
 transformers<5.0.0
 -r common-requirements.txt
